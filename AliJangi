@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فروشگاه کالای دیجیتال</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        /* صفحه لود */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #6200ea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            z-index: 1000;
+        }
+        #loader.fade-out {
+            animation: fadeOut 1s forwards;
+        }
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+        header {
+            background: linear-gradient(45deg, #6200ea, #3700b3);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        header p {
+            font-size: 1.2rem;
+            margin: 0.5rem 0 0;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #3700b3;
+            padding: 1rem;
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 1rem;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .product {
+            background: linear-gradient(135deg, #ffffff, #e3e3f1);
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .product img {
+            width: 100%;
+            height: auto;
+        }
+        .product-info {
+            padding: 1.2rem;
+            text-align: center;
+        }
+        .product-info h3 {
+            margin: 0.8rem 0;
+            font-size: 1.4rem;
+        }
+        .product-info p {
+            margin: 0.5rem 0;
+            color: #555;
+        }
+        .product-info button {
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .product-info button:hover {
+            background-color: #3700b3;
+            transform: scale(1.05);
+        }
+        footer {
+            background-color: #3700b3;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-radius: 15px 15px 0 0;
+        }
+    </style>
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            loader.classList.add('fade-out');
+            loader.addEventListener('animationend', function() {
+                loader.style.display = 'none';
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="loader">در حال بارگذاری...</div>
+    <header>
+        <h1>فروشگاه کالای دیجیتال</h1>
+        <p>بهترین محصولات دیجیتال با بهترین قیمت‌ها</p>
+    </header>
+    <nav>
+        <a href="#">خانه</a>
+        <a href="#">محصولات</a>
+        <a href="#">درباره ما</a>
+        <a href="#">تماس با ما</a>
+    </nav>
+    <div class="container">
+        <h2>محصولات ویژه</h2>
+        <div class="products">
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200" alt="محصول 1">
+                <div class="product-info">
+                    <h3>گوشی هوشمند</h3>
+                    <p>قیمت: 10,000,000 تومان</p>
+                    <button>خرید</button>
+                </div>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200" alt="محصول 2">
+                <div class="product-info">
+                    <h3>لپ‌تاپ</h3>
+                    <p>قیمت: 25,000,000 تومان</p>
+                    <button>خرید</button>
+                </div>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200" alt="محصول 3">
+                <div class="product-info">
+                    <h3>تبلت</h3>
+                    <p>قیمت: 15,000,000 تومان</p>
+                    <button>خرید</button>
+                </div>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200" alt="محصول 4">
+                <div class="product-info">
+                    <h3>ساعت هوشمند</h3>
+                    <p>قیمت: 3,000,000 تومان</p>
+                    <button>خرید</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>تمامی حقوق محفوظ است &copy; 2024</p>
+    </footer>
+</body>
+</html>
